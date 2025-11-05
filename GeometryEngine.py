@@ -192,6 +192,12 @@ def test_geometry_engine():
   print(f"Distance between {p1} and {p2}: {distance}")
   assert distance = 7, f"Expected 7, got {distance_same}"
 
+  # Тест с одинаковыми точками
+  p3 = Point(4, 4)
+  distance_same = GeometryEngine.calculate_distance(p3, p3)
+  print(f"Distance between same point: {distance_same}")
+  assert = distance_same == 0, f"Expected 0, got {distance_same}"
+  
   print("All geometry tests passed")
 
 
