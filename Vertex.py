@@ -8,8 +8,8 @@ class Vertex(Point):
         Направление смотрится так, будто вершина смотрит в центр
     """
 
-    def __init__(self, y: int, x: int):
-        super().__init__(y, x)
+    def __init__(self, i: int, j: int):
+        super().__init__(i, j)
         self.__rightNeighborVert = None
         self.__leftNeighborVert = None
 

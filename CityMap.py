@@ -20,9 +20,11 @@ class CityMap:
         self.vertCount = vertCount
         self.infrastructureCount = infrastructureCount
         self.radii = radii
+        self.vertexes = self.getVertexes()
         self.map = self.createMap()
 
-    def createMap(self):
+
+    def createMap(self) -> int[int][int]:
         """
         createMap() -> int[n][n]
 
@@ -31,5 +33,11 @@ class CityMap:
         mapRadius можно определить как vertCount * arithmeticMean(radii), где arithmeticMean - среднее арифметическое
         Центр окружности размещается в центре матрицы. Идём по окружности и случайно выбираем вершины на чётных координатах
         Также сохраняем координаты вершин и их соседей: vertexes[vertCount] = {Vertex vertex1, ...}
+        """
+        pass
+
+    def getVertexes(self) -> int[int]:
+        """
+        Здесь будет происходить начальный поиск вершин карты
         """
         pass
