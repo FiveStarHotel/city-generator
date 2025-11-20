@@ -1,5 +1,5 @@
 class Point:
 
-    def __init__(self, y:int, x:int):
-        self.y = y
-        self.x = x
+    def __init__(self, i:int, j:int):
+        self.i = i
+        self.j = j

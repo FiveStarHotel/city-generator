@@ -1,5 +1,5 @@
 """ 
-Реализация алгоритмово для работы с окружностями зданий
+Реализация алгоритмов для работы с окружностями зданий
 ОЗО + ЗВО + формулы расстояний
 """
 
@@ -7,6 +7,7 @@ from typing import List, Set
 from CityMap import CityMap
 from Vertex import Vertex
 from Point import Point
+from ConstOfBuilds import *
 
 class GeometryEngine:
 #Реализует алгоритмы ОЗО и ЗВО
@@ -18,7 +19,8 @@ class GeometryEngine:
     Dist = |i1 - i2| + |j1 - j2|
     """
 
-    return abs(building1.i - building2.i) + abs(building1.j = building2.j)
+    return abs(building1.i - building2.i) + abs(building1.j - building2.j)
+
 
   @staticmethod
   def get_buildings_on_circle(center: Point, radius: int, city: CityMap) -> List[Point]:
@@ -29,13 +31,13 @@ class GeometryEngine:
 
     buildings = []
 
-    # Если радиус нечентый, делаем четным
+    # Если радиус нечётный, делаем четным
     effective_radius = radius if radius % 2 == 0 else radius - 1
 
-    # Обработка особбых случае
+    # Обработка особых случае
     if effective_radius == 0:
       # Проверка, является ли центр зданием
-      if GeometryEngine._is_valid_building(center.i, center.j, city): 
+      if GeometryEngine._is_valid_building(center.i, center.j, city):
         return [center]
       return []
 
@@ -43,10 +45,10 @@ class GeometryEngine:
     if effective_radius == 2:
       # Проверяем 4 возможных направления
       directions = [(0, 2), (0, -2), (2, 0), (-2, 0)]
-      for di,, dj in directions:
+      for di, dj in directions:
         new_i, new_j = center.i + di, center.j + dj
         if GeometryEngine._is_valid_building(new_i, new_j, city):
-          buildings.append(Point(new_i, new_j)
+            buildings.append(Point(new_i, new_j))
       return buildings
 
 
@@ -54,15 +56,15 @@ class GeometryEngine:
 
     # 1. Здания с одинаковой i-координатой
     buildings.extend(GeometryEngine._get_buildings_same_i(center, effective_radius, city))
-        
-    # 2. Здания с одинаковой j-координатой  
+
+    # 2. Здания с одинаковой j-координатой
     buildings.extend(GeometryEngine._get_buildings_same_j(center, effective_radius, city))
-        
+
     # 3. Здания с разными координатами (формула из теории)
-    buildings.extend(GeometryEngine._get_buildings_different_coords(center, effective_radius, city))
+    buildings.extend(GeometryEngine._get_buildings_different_cords(center, effective_radius, city))
 
 
-    return list(set(buildings)) # Убираем дупликаты
+    return list(set(buildings)) # Убираем дубликаты
 
   @staticmethod
   def _get_buildings_same_i(center: Point, radius: int, city: CityMap) -> List[Point]:
@@ -74,19 +76,20 @@ class GeometryEngine:
           result.append(Point(center.i, new_j))
       return result
 
+
   @staticmethod
   def _get_buildings_same_j(center: Point, radius: int, city: CityMap) -> List[Point]:
       """Здания с одинаковой j-координатой: i_circle = i +- (R-2)"""
       result = []
       for di in [-(radius - 2), (radius - 2)]:
         new_i = center.i + di
-        if GeometryEngine._is_vaild_building(new_i, center.j, city):
-          resutl.append(Point(new_i, center.j))
+        if GeometryEngine._is_valid_building(new_i, center.j, city):
+          result.append(Point(new_i, center.j))
       return result
 
 
   @staticmethod
-  def _get_buildings_different_coords(center: Point, radius: int, city: CityMap) -> List[Point]:
+  def _get_buildings_different_cords(center: Point, radius: int, city: CityMap) -> List[Point]:
       """
       Здания с разными координатами по формуле:
       j_circle = j +- k
@@ -94,7 +97,7 @@ class GeometryEngine:
       где k = 2, 4, 6, ..., R-2
       """
 
-      resul = []
+      result = []
 
       for k in range(2, radius, 2): #k = 2, 4, 6, ..., R-2
         remaining = radius - k
@@ -105,10 +108,10 @@ class GeometryEngine:
           (-k, remaining), (-k, -remaining)
         ]
 
-      for dj, di in combinations:
-        new_i, new_j = center.i + di, center.j + dj
-        if GeometryEngine._is_valid_building(new_i, new_j, city):
-          result.append(Point(new_i, new_j))
+        for dj, di in combinations:
+            new_i, new_j = center.i + di, center.j + dj
+            if GeometryEngine._is_valid_building(new_i, new_j, city):
+              result.append(Point(new_i, new_j))
         
       
   @staticmethod
@@ -139,7 +142,7 @@ class GeometryEngine:
       Быстрый подсчёт количества покрываемых зданий (для жадного алгоритма)
       """
 
-      return len(GeometryEngine.get_residential_buildings_in_circle(center, radius, city))
+      return sum(point == RES_BUILD for point in GeometryEngine.get_residential_buildings_in_circle(center, radius, city))
     
   @staticmethod
   def get_coverage_score(center: Point, radius: int, city: CityMap, uncovered_buildings: set) -> int:
@@ -158,7 +161,7 @@ class GeometryEngine:
       buildings = []
       for i in range(len(city.map)):
         for j in range(len(city.map[0])):
-          if city.mape[i][j] == 0: #Жилое здание
+          if city.map[i][j] == 0: #Жилое здание
             buildings.append(Point(i, j))
       return buildings
     
@@ -172,7 +175,7 @@ class GeometryEngine:
       best_score = -1
 
       for candidate in candidates:
-        score = GeomtryEngine.get_coverage_score(candidate, radius, city, uncovered_buildings)
+        score = GeometryEngine.get_coverage_score(candidate, radius, city, uncovered_buildings)
         if score > best_score:
           best_score = score
           best_center = candidate
