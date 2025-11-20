@@ -1,4 +1,5 @@
 from Vertex import Vertex
+from ConstOfBuilds import *
 
 class CityMap:
     """
@@ -12,9 +13,7 @@ class CityMap:
         0 - жилое здание
         1, 2, ..., infrastructureCount - соответствующий вид инфраструктуры
     """
-    VOID = -2
-    ROAD = -1
-    RES_BUILD = 0
+
 
     def __init__(self, vertCount: int, infrastructureCount: int, radii: int[int]):
         self.vertCount = vertCount
