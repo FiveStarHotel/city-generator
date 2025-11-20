@@ -1,4 +1,6 @@
-class Vertex:
+from Point import Point
+
+class Vertex(Point):
     """
     Объект Vertex содержит следующие поля:
     x, y - координаты вершины   !(i -> y, j -> x)!
@@ -7,8 +9,7 @@ class Vertex:
     """
 
     def __init__(self, y: int, x: int):
-        self.y = y
-        self.x = x
+        super().__init__(y, x)
         self.__rightNeighborVert = None
         self.__leftNeighborVert = None
 

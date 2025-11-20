@@ -5,7 +5,8 @@
 
 from typing import List, Set
 from CityMap import CityMap
-from Vertex import Point
+from Vertex import Vertex
+from Point import Point
 
 class GeometryEngine:
 #Реализует алгоритмы ОЗО и ЗВО
