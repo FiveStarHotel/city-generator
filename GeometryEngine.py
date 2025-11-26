@@ -141,8 +141,7 @@ class GeometryEngine:
       """
       Быстрый подсчёт количества покрываемых зданий (для жадного алгоритма)
       """
-
-      return sum(point == RES_BUILD for point in GeometryEngine.get_residential_buildings_in_circle(center, radius, city))
+      return sum(city.getBuild(point) == RES_BUILD for point in GeometryEngine.get_residential_buildings_in_circle(center, radius, city))
     
   @staticmethod
   def get_coverage_score(center: Point, radius: int, city: CityMap, uncovered_buildings: set) -> int:

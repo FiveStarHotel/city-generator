@@ -52,4 +52,10 @@ class CityMap:
         """
         Данная функция меняет значение конкретной точки на карте на значение value
         """
-        self.map[point.i, point.j] = value
+        self.map[point.i][point.j] = value
+
+    def getBuild(self, point: Point) -> int:
+        """
+        Данный метод возвращает тип здания
+        """
+        return self.map[point.i][point.j]
