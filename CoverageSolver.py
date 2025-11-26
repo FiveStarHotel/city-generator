@@ -39,6 +39,7 @@ class CoverageSolver:
         """
         Итоговый метод дял оптимального покрытия
         """
+
         for infrastructure in range(0, city.infrastructureCount):
             cityCopy = copy.deepcopy(city)
             while RES_BUILD in cityCopy.map:
