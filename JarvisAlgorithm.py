@@ -22,8 +22,6 @@ class JarvisAlgorithm:
         points = JarvisAlgorithm._get_res_points(city_map)
         points_amount = len(points)
 
-        print([str(point) for point in points])
-
         if points_amount < 3:
             city_map.vertexes = points
             return
