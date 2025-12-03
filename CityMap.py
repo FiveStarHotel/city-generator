@@ -26,7 +26,7 @@ class CityMap:
         self.map = self.createMap()
 
 
-    def createMap(self) -> int[int][int]:
+    def createMap(self) -> list[list[int]]:
         """
         Данный метод создает квадратную матрицу, которая и будет являться нашей картой.
         Размер матрицы можно определить так: mapRadius * 2, где mapRadius - радиус выпуклого многоугольника
@@ -39,7 +39,7 @@ class CityMap:
         cityMap = [[VOID for _ in range(0, sizeOfMatrix)] for _ in range(0, sizeOfMatrix)]
 
         #TODO: Закончить алгоритм ГВМ
-
+        return MapGenerator.generate_map(self)
         pass
 
     def getVertexes(self) -> int[int]:
