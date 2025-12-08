@@ -29,7 +29,7 @@ class GeometryEngine:
     Возвращает список точек-зданий
     """
 
-    buildings = []
+    buildings = set()
 
     # Если радиус нечётный, делаем четным
     effective_radius = radius if radius % 2 == 0 else radius - 1
@@ -40,89 +40,49 @@ class GeometryEngine:
       if GeometryEngine._is_valid_building(center.i, center.j, city):
         return [center]
       return []
-
-    # Случай radius = 2 (только соседние здания)
+  #Проверка соседних зданий:
     if effective_radius == 2:
-      # Проверяем 4 возможных направления
       directions = [(0, 2), (0, -2), (2, 0), (-2, 0)]
       for di, dj in directions:
-        new_i, new_j = center.i + di, center.j + dj
-        if GeometryEngine._is_valid_building(new_i, new_j, city):
-            buildings.append(Point(new_i, new_j))
-      return buildings
-
-
-    #Основной алгоритм для radius > 2
-
-    # 1. Здания с одинаковой i-координатой
-    buildings.extend(GeometryEngine._get_buildings_same_i(center, effective_radius, city))
-
-    # 2. Здания с одинаковой j-координатой
-    buildings.extend(GeometryEngine._get_buildings_same_j(center, effective_radius, city))
-
-    # 3. Здания с разными координатами (формула из теории)
-    buildings.extend(GeometryEngine._get_buildings_different_cords(center, effective_radius, city))
-
-
-    return list(set(buildings)) # Убираем дубликаты
-
-  @staticmethod
-  def _get_buildings_same_i(center: Point, radius: int, city: CityMap) -> List[Point]:
-      """Здания с одинаковой i-координатой: j_circle = j +- (R-2)"""
-      result = []
-      for dj in [-(radius - 2), (radius - 2)]:
-        new_j = center.j + dj
-        if GeometryEngine._is_valid_building(center.i, new_j, city):
-          result.append(Point(center.i, new_j))
-      return result
-
-
-  @staticmethod
-  def _get_buildings_same_j(center: Point, radius: int, city: CityMap) -> List[Point]:
-      """Здания с одинаковой j-координатой: i_circle = i +- (R-2)"""
-      result = []
-      for di in [-(radius - 2), (radius - 2)]:
-        new_i = center.i + di
-        if GeometryEngine._is_valid_building(new_i, center.j, city):
-          result.append(Point(new_i, center.j))
-      return result
-
-
-  @staticmethod
-  def _get_buildings_different_cords(center: Point, radius: int, city: CityMap) -> List[Point]:
-      """
-      Здания с разными координатами по формуле:
-      j_circle = j +- k
-      i_circle = i +- (R - k)
-      где k = 2, 4, 6, ..., R-2
-      """
-
-      result = []
-
-      for k in range(2, radius, 2): #k = 2, 4, 6, ..., R-2
-        remaining = radius - k
-
-        # 4 комбинации знаков (+-k, +-remaining)
-        combinations = [
-          (k, remaining), (k, -remaining),
-          (-k, remaining), (-k, -remaining)
-        ]
-
-        for dj, di in combinations:
-            new_i, new_j = center.i + di, center.j + dj
-            if GeometryEngine._is_valid_building(new_i, new_j, city):
-              result.append(Point(new_i, new_j))
+          new_i, new_j = center.i + di, center.j + dj
+          if GeometryEngine._is_valid_building(new_i, new_j, city):
+            buildings.add(Point(new_i, new_j))
+      return list(buildings)
+      
+   # Общий случай: перебираем все возможные точки на "окружности"
+  # Для манхэттенского расстояния |di| + |dj| = effective_radius
+    
+    # Перебираем все возможные di (только четные)
+    for di in range(-effective_radius, effective_radius + 1, 2):
+        # Вычисляем соответствующие dj
+        dj_positive = effective_radius - abs(di)
+        dj_negative = -dj_positive
         
+        # Проверяем обе возможные точки для каждого di
+        # Используем set для уникальных dj значений
+        unique_dj = {dj_positive, dj_negative}  # Автоматически убераем дубликаты
+        for dj in unique_dj:
+        # проверка точки
+            new_i = center.i + di
+            new_j = center.j + dj
+            
+            # Проверяем, что это валидное здание
+            if GeometryEngine._is_valid_building(new_i, new_j, city):
+                buildings.add(Point(new_i, new_j))
+    
+    return list(buildings)
       
   @staticmethod
   def get_residential_buildings_in_circle(center: Point, radius: int, city: CityMap) -> List[Point]:
     #ЗВО - находит все жилые здания на расстоянии <= radius от центра.
-    all_buildings = []
+    buildings_set = set()  # Используем set для уникальности
     for r in range(0, radius + 1, 2):
-      buildings_on_radius = GeometryEngine.get_buildings_on_circle(center, r, city)
-      all_buildings.extend(buildings_on_radius)
-      
-    return all_buildings
+        buildings_on_radius = GeometryEngine.get_buildings_on_circle(center, r, city)
+        for point in buildings_on_radius:
+            buildings_set.add((point.i, point.j))  # Храним как кортеж для уникальности
+    
+    # Преобразуем обратно в список Point
+    return [Point(i, j) for i, j in buildings_set]
 
   @staticmethod
   def _is_valid_building(i: int, j: int, city: CityMap) -> bool:
@@ -133,8 +93,8 @@ class GeometryEngine:
       if i < 0 or i >= len(city.map) or j < 0 or j >= len(city.map[0]):
         return False
 
-      # Проверка, что это жилое здание (код 0)
-      return city.map[i][j] == 0
+      # Проверка, что это жилое здание (код константы)
+      return city.map[i][j] == RES_BUILD
     
   @staticmethod
   def count_covered_buildings(center: Point, radius: int, city: CityMap) -> int:
@@ -150,7 +110,11 @@ class GeometryEngine:
       Возвращает количество ЕЩЁ НЕПОКРЫТЫХ зданий, которые покроет этот центр
       """
       all_covered = set(GeometryEngine.get_residential_buildings_in_circle(center, radius, city))
-      return len(all_covered.intersection(uncovered_buildings))
+    
+      # Преобразуем Point в кортежи для сравнения
+      covered_tuples = {(p.i, p.j) for p in all_covered}
+    
+      return len(covered_tuples.intersection(uncovered_buildings))
 
   @staticmethod
   def get_all_residential_buildings(city: CityMap) -> List[Point]:
@@ -160,7 +124,7 @@ class GeometryEngine:
       buildings = []
       for i in range(len(city.map)):
         for j in range(len(city.map[0])):
-          if city.map[i][j] == 0: #Жилое здание
+          if city.map[i][j] == RES_BUILD: #Константа
             buildings.append(Point(i, j))
       return buildings
     
@@ -193,13 +157,13 @@ def test_geometry_engine():
   p2 = Point(5, 7)
   distance = GeometryEngine.calculate_distance(p1, p2)
   print(f"Distance between {p1} and {p2}: {distance}")
-  assert distance = 7, f"Expected 7, got {distance_same}"
+  assert distance == 7, f"Expected 7, got {distance}"
 
   # Тест с одинаковыми точками
   p3 = Point(4, 4)
   distance_same = GeometryEngine.calculate_distance(p3, p3)
   print(f"Distance between same point: {distance_same}")
-  assert = distance_same == 0, f"Expected 0, got {distance_same}"
+  assert distance_same == 0, f"Expected 0, got {distance_same}"
   
   print("All geometry tests passed")
 
