@@ -94,7 +94,12 @@ class GeometryEngine:
         return False
 
       # Проверка, что это жилое здание (код константы)
-      return city.map[i][j] == RES_BUILD
+      # return city.map[i][j] == RES_BUILD
+      
+      # Нужно учесть, что map может быть None
+      if city.map is None:
+        return False
+      return i < len(city.map) and j < len(city.map[0]) and city.map[i][j] == RES_BUILD
     
   @staticmethod
   def count_covered_buildings(center: Point, radius: int, city: CityMap) -> int:
