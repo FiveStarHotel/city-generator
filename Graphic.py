@@ -6,18 +6,21 @@ from CoverageSolver import CoverageSolver
 
 def paint_city(city: CityMap):
     textures ={
-        VOID: {"type" : "color", "value" : (255, 255, 255)},
-        ROAD: {"type" : "image", "value" :  "icons/road.png"},
-        RES_BUILD: {"type" : "image", "value" :  "icons/res_build.png"}
+        VOID: {"type" : "color", "value" : (255, 255, 255), "text" : ""},
+        ROAD: {"type" : "image", "value" :  "icons/road.png", "text" : "Дорога"},
+        RES_BUILD: {"type" : "image", "value" :  "icons/res_build.png", "text" : "Жилой дом"}
     }
     textures.update(_generate_color(city.infrastructureCount))
 
     size = len(city.map)
     CELL = 1060 // (size*1.3)
+    legend_size = CELL * 11
     pygame.init()
 
-    screen = pygame.display.set_mode((size * CELL, size * CELL))
+    screen = pygame.display.set_mode((size * CELL + legend_size, size * CELL))
     pygame.display.set_caption("Генерация города")
+
+    font = pygame.font.SysFont("Arial", int (CELL))
 
     _load_assets(textures, CELL)
 
@@ -50,6 +53,25 @@ def paint_city(city: CityMap):
                         (x * CELL, y * CELL)
                     )
 
+        legend_x = size * CELL + 10
+        legend_y = 10
+        line_h = 30
+
+        pygame.draw.rect(screen, (250, 250, 250), (size * CELL, 0, legend_size, size * CELL))
+
+        for key, obj in textures.items():
+            rect = (legend_x, legend_y, 20, 20)
+
+            if obj["type"] == "color":
+                pygame.draw.rect(screen, obj["value"], rect)
+            else:
+                screen.blit(obj["image"], rect)
+
+            text = font.render(obj["text"], True, (0, 0, 0))
+            screen.blit(text, (legend_x + 30, legend_y))
+
+            legend_y += line_h
+
         pygame.display.flip()
         clock.tick(30)
 
@@ -68,7 +90,8 @@ def _generate_color(count: int):
         r, g, b = colorsys.hsv_to_rgb(hue, 0.6, 0.95)
         colors[i] = {
             "type": "color",
-            "value" : (int(r * 255),int(g * 255),int(b * 255))
+            "value" : (int(r * 255),int(g * 255),int(b * 255)),
+            "text" : f"{i}-й тип строения"
         }
     return colors
 
