@@ -11,10 +11,9 @@ def paint_city(city: CityMap):
         RES_BUILD: {"type" : "image", "value" :  "icons/res_build.png"}
     }
     textures.update(_generate_color(city.infrastructureCount))
-    print(textures)
 
     size = len(city.map)
-    CELL = 1040 // (size*1.3)
+    CELL = 1060 // (size*1.3)
     pygame.init()
 
     screen = pygame.display.set_mode((size * CELL, size * CELL))
@@ -74,14 +73,6 @@ def _generate_color(count: int):
     return colors
 
 if __name__ == '__main__':
-    city = CityMap(3, 2, [4, 6])
-    # CoverageSolver.solverMethod(city)
-    # city.map = [
-    #     [-2, -2, 0, -2, -2, -2],
-    #     [-2, -1, -1, -1, -1, -2],
-    #     [0, -1, 1, -1, 0, -2],
-    #     [-1, -1, -1, -1, -1, -2],
-    #     [-2, -2, 0, -1, 2, -2],
-    #     [-2, -2, -2, -2, -2, -2]
-    # ]
+    city = CityMap(5, 1, [4])
+    CoverageSolver.solverMethod(city)
     paint_city(city)

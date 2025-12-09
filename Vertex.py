@@ -33,7 +33,9 @@ class Vertex(Point):
     def highestVertex(vertexes):
         highVert = vertexes[0]
         for vertex in vertexes:
-            if vertex.y >= highVert.y:
+            # if vertex.y <= lowestVert.y:
+            # .y не существует (i - это строка, j - столбец):
+            if vertex.i >= highVert.i:
                 highVert = vertex
         return highVert
 
@@ -41,6 +43,8 @@ class Vertex(Point):
     def lowestVertex(vertexes):
         lowestVert = vertexes[0]
         for vertex in vertexes:
-            if vertex.y <= lowestVert.y:
+            # if vertex.y <= lowestVert.y:
+            # .y не существует (i - это строка, j - столбец):
+            if vertex.i >= lowestVert.i:
                 lowestVert = vertex
         return lowestVert

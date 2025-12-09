@@ -3,11 +3,11 @@ import random
 from ConstOfBuilds import *
 from Point import Point
 from Vertex import Vertex
-
+from CityMap import CityMap
 
 class MapGenerator:
     @staticmethod
-    def generate_map(city_map) -> list[list[int]]:
+    def generate_map(city_map: CityMap) -> list[list[int]]:
         from JarvisAlgorithm import JarvisAlgorithm
         """
         Реализует алгоритм ГВМ:
@@ -21,9 +21,9 @@ class MapGenerator:
         if city_map.infrastructureCount > 0 and city_map.radii:
             avg_radius = sum(city_map.radii) / city_map.infrastructureCount
         else:
-            avg_radius = 5  # Значение по умолчанию, если радиусов нет
+            avg_radius = 4  # Значение по умолчанию, если радиусов нет
 
-        mapRadius = int(city_map.vertCount * avg_radius)
+        mapRadius = int(city_map.vertCount * (avg_radius + avg_radius % 2))
         sizeOfMatrix = mapRadius * 2
 
         # Создаем пустую матрицу
@@ -35,9 +35,10 @@ class MapGenerator:
         R = mapRadius - 2
 
         candidate_points = []
-        for k in range(R):
+        for k in range(0, R, 2):
             offset_primary = k
             offset_secondary = int(math.sqrt(R * R - k * k))
+            offset_secondary -= offset_secondary % 2
 
             signs = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
             for si, sj in signs:
@@ -55,13 +56,13 @@ class MapGenerator:
 
         for i, j in selected_cords:
             if 0 <= i < sizeOfMatrix and 0 <= j < sizeOfMatrix:
-                city_map.map[i][j] = RES_BUILD
+                city_map.setPoint(Point(i, j), RES_BUILD)
 
 
         JarvisAlgorithm.jarvis_algorithm(city_map)
 
 
-        city_map.map = [[VOID for _ in range(sizeOfMatrix)] for _ in range(sizeOfMatrix)]
+        # city_map.map = [[VOID for _ in range(sizeOfMatrix)] for _ in range(sizeOfMatrix)]
 
 
         raw_points = city_map.vertexes
