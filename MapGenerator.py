@@ -3,12 +3,13 @@ import random
 from ConstOfBuilds import *
 from Point import Point
 from Vertex import Vertex
-from JarvisAlgorithm import JarvisAlgorithm
+
 
 
 class MapGenerator:
     @staticmethod
     def generate_map(city_map) -> list[list[int]]:
+        from JarvisAlgorithm import JarvisAlgorithm
         """
         Реализует алгоритм ГВМ:
         1. Расчет размеров по формуле из ТЗ.
@@ -58,7 +59,7 @@ class MapGenerator:
                 city_map.map[i][j] = RES_BUILD
 
 
-        JarvisAlgorithm.jarvis_algorithm(JarvisAlgorithm, city_map)
+        JarvisAlgorithm.jarvis_algorithm(city_map)
 
 
         city_map.map = [[VOID for _ in range(sizeOfMatrix)] for _ in range(sizeOfMatrix)]

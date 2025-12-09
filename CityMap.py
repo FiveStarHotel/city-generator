@@ -1,8 +1,10 @@
 from contextlib import nullcontext
+from typing import List
 
 from Vertex import Vertex
 from Point import Point
 from ConstOfBuilds import *
+from MapGenerator import MapGenerator
 
 class CityMap:
     """
@@ -18,7 +20,7 @@ class CityMap:
     """
 
 
-    def __init__(self, vertCount: int, infrastructureCount: int, radii: int[int]):
+    def __init__(self, vertCount: int, infrastructureCount: int, radii: List[int]):
         self.vertCount = vertCount
         self.infrastructureCount = infrastructureCount
         self.radii = radii
@@ -26,7 +28,7 @@ class CityMap:
         self.map = self.createMap()
 
 
-    def createMap(self) -> list[list[int]]:
+    def createMap(self) -> List[List[int]]:
         """
         Данный метод создает квадратную матрицу, которая и будет являться нашей картой.
         Размер матрицы можно определить так: mapRadius * 2, где mapRadius - радиус выпуклого многоугольника
@@ -34,15 +36,15 @@ class CityMap:
         Центр окружности размещается в центре матрицы. Идём по окружности и случайно выбираем вершины на чётных координатах
         Также сохраняем координаты вершин и их соседей: vertexes[vertCount] = {Vertex vertex1, ...}
         """
-        mapRadius = self.vertCount * (sum(self.radii) / self.infrastructureCount)
+        mapRadius = self.vertCount * int(sum(self.radii) / self.infrastructureCount)
         sizeOfMatrix = mapRadius * 2
         cityMap = [[VOID for _ in range(0, sizeOfMatrix)] for _ in range(0, sizeOfMatrix)]
 
         #TODO: Закончить алгоритм ГВМ
         return MapGenerator.generate_map(self)
-        pass
 
-    def getVertexes(self) -> int[int]:
+
+    def getVertexes(self) -> List[int]:
         """
         Здесь будет происходить начальный поиск вершин карты
         """

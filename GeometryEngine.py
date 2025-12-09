@@ -166,7 +166,3 @@ def test_geometry_engine():
   assert distance_same == 0, f"Expected 0, got {distance_same}"
   
   print("All geometry tests passed")
-
-
-if __name__ == "__main__":
-    test_geometry_engine()

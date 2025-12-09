@@ -4,7 +4,7 @@ from CityMap import CityMap
 from Point import Point
 from GeometryEngine import GeometryEngine
 from ConstOfBuilds import *
-
+from JarvisAlgorithm import JarvisAlgorithm
 
 class CoverageSolver:
 
@@ -42,11 +42,11 @@ class CoverageSolver:
 
         for infrastructure in range(0, city.infrastructureCount):
             cityCopy = copy.deepcopy(city)
-            while RES_BUILD in cityCopy.map:
+            while any(RES_BUILD in row for row in cityCopy.map):
                 CoverageSolver.iterationSolution(cityCopy, infrastructure)
-                if RES_BUILD not in cityCopy.map:
+                if all(RES_BUILD not in row for row in cityCopy.map):
                     break
-                #TODO Метод Джарвиса
+            JarvisAlgorithm.jarvis_algorithm(cityCopy)
             for i in range(0, len(city.map)):
                 for j in range(0, len(city.map[i])):
                     point = Point(i, j)

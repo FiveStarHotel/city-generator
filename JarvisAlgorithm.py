@@ -18,7 +18,7 @@ from Point import Point
 
 class JarvisAlgorithm:
     @staticmethod
-    def jarvis_algorithm(self, city_map: CityMap):
+    def jarvis_algorithm(city_map: CityMap):
         points = JarvisAlgorithm._get_res_points(city_map)
         points_amount = len(points)
 
