@@ -96,6 +96,6 @@ def _generate_color(count: int):
     return colors
 
 if __name__ == '__main__':
-    city = CityMap(5, 1, [4])
+    city = CityMap(4, 1, [4])
     CoverageSolver.solverMethod(city)
     paint_city(city)

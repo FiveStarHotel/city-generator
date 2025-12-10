@@ -18,6 +18,9 @@ class GeometryEngine:
     Вычисляет расстояние между двумя зданиями по формуле
     Dist = |i1 - i2| + |j1 - j2|
     """
+    if building1.i == building2.i and building1.j == building2.j:
+      return 0
+    return abs(building1.i - building2.i) + abs(building1.j - building2.j) + 2
 
     return abs(building1.i - building2.i) + abs(building1.j - building2.j)
 
@@ -27,6 +30,7 @@ class GeometryEngine:
     """
     ОЗО - находит все здания на расстоянии radius от центра
     Возвращает список точек-зданий
+    Движение возможно только по дорогам
     """
 
     buildings = set()
@@ -40,7 +44,7 @@ class GeometryEngine:
       if GeometryEngine._is_valid_building(center.i, center.j, city):
         return [center]
       return []
-  #Проверка соседних зданий:
+    #Проверка соседних зданий:
     if effective_radius == 2:
       directions = [(0, 2), (0, -2), (2, 0), (-2, 0)]
       for di, dj in directions:
@@ -51,13 +55,13 @@ class GeometryEngine:
       
    # Общий случай: перебираем все возможные точки на "окружности"
   # Для манхэттенского расстояния |di| + |dj| = effective_radius
-    
+
     # Перебираем все возможные di (только четные)
     for di in range(-effective_radius, effective_radius + 1, 2):
         # Вычисляем соответствующие dj
         dj_positive = effective_radius - abs(di)
         dj_negative = -dj_positive
-        
+
         # Проверяем обе возможные точки для каждого di
         # Используем set для уникальных dj значений
         unique_dj = {dj_positive, dj_negative}  # Автоматически убераем дубликаты
@@ -65,10 +69,16 @@ class GeometryEngine:
         # проверка точки
             new_i = center.i + di
             new_j = center.j + dj
-            
+
+            if di == 0:
+                new_j = new_j - 2 if dj > 0 else new_j + 2
+            if dj == 0:
+                new_i = new_i - 2 if di > 0 else new_i + 2
+
             # Проверяем, что это валидное здание
             if GeometryEngine._is_valid_building(new_i, new_j, city):
                 buildings.add(Point(new_i, new_j))
+
     
     return list(buildings)
       
