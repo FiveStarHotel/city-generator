@@ -23,7 +23,7 @@ class GeometryEngine:
     return abs(building1.i - building2.i) + abs(building1.j - building2.j) + 2
 
 
- def get_buildings_on_circle(center: Point, radius: int, city: CityMap) -> List[Point]:
+  def get_buildings_on_circle(center: Point, radius: int, city: CityMap) -> List[Point]:
     """
     ОЗО - находит все здания на расстоянии radius от центра
     Возвращает список точек-зданий
@@ -59,7 +59,7 @@ class GeometryEngine:
         (-k, radius - k),
         (-k, -(radius - k)),
         (radius - k, k),
-        (radius - k, -k),
+        (radius - k), -k,
         (-(radius - k, k)),
         (-(radius - k), k)
       ]
