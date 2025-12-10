@@ -7,7 +7,7 @@ from CityMap import CityMap
 
 class MapGenerator:
     @staticmethod
-    def generate_map(city_map: CityMap) -> list[list[int]]:
+    def generate_map(city_map: CityMap, fixed_size: bool) -> list[list[int]]:
         from JarvisAlgorithm import JarvisAlgorithm
         """
         Реализует алгоритм ГВМ:
@@ -17,14 +17,17 @@ class MapGenerator:
         4. Сканирующая строка.
         """
 
-
-        if city_map.infrastructureCount > 0 and city_map.radii:
-            avg_radius = sum(city_map.radii) / city_map.infrastructureCount
-        else:
-            avg_radius = 4  # Значение по умолчанию, если радиусов нет
-
-        mapRadius = int(city_map.vertCount * (avg_radius + avg_radius % 2))
+        mapRadius = city_map.vertCount * 4
         sizeOfMatrix = mapRadius * 2
+
+        if not fixed_size:
+            if city_map.infrastructureCount > 0 and city_map.radii:
+                avg_radius = sum(city_map.radii) / city_map.infrastructureCount
+            else:
+                avg_radius = 4  # Значение по умолчанию, если радиусов нет
+
+            mapRadius = int(city_map.vertCount * (avg_radius + avg_radius % 2))
+            sizeOfMatrix = mapRadius * 2
 
         # Создаем пустую матрицу
         city_map.map = [[VOID for _ in range(sizeOfMatrix)] for _ in range(sizeOfMatrix)]

@@ -20,19 +20,14 @@ class CityMap:
     """
 
 
-    def __init__(self, vertCount: int, infrastructureCount: int, radii: List[int]):
+    def __init__(self, vertCount: int, infrastructureCount: int, radii: List[int], fixed_size = False):
         from MapGenerator import MapGenerator
         self.vertCount = vertCount
         self.infrastructureCount = infrastructureCount
         self.radii = radii
-        self.vertexes = self.getVertexes()
-        self.map = MapGenerator.generate_map(self)
+        self.vertexes = None
+        self.map = MapGenerator.generate_map(self, fixed_size)
 
-    def getVertexes(self) -> List[int]:
-        """
-        Здесь будет происходить начальный поиск вершин карты
-        """
-        pass
 
     def setPoint(self, point: Point, value: int) -> None:
         """

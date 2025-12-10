@@ -14,7 +14,7 @@ def paint_city(city: CityMap):
 
     size = len(city.map)
     CELL = 1060 // (size*1.3)
-    legend_size = CELL * 11
+    legend_size = CELL * 13
     pygame.init()
 
     screen = pygame.display.set_mode((size * CELL + legend_size, size * CELL))
@@ -64,11 +64,14 @@ def paint_city(city: CityMap):
 
             if obj["type"] == "color":
                 pygame.draw.rect(screen, obj["value"], rect)
+                text = font.render(f"{obj["text"]},  R={city.radii[key-1]}", True, (0, 0, 0)) if\
+                    key in range(1, city.infrastructureCount+1) else\
+                    font.render(obj["text"], True, (0, 0, 0))
+                screen.blit(text, (legend_x + 30, legend_y))
             else:
                 screen.blit(obj["image"], rect)
-
-            text = font.render(obj["text"], True, (0, 0, 0))
-            screen.blit(text, (legend_x + 30, legend_y))
+                text = font.render(obj["text"], True, (0, 0, 0))
+                screen.blit(text, (legend_x + 30, legend_y))
 
             legend_y += line_h
 
@@ -96,6 +99,7 @@ def _generate_color(count: int):
     return colors
 
 if __name__ == '__main__':
-    city = CityMap(4, 1, [4])
+
+    city = CityMap(4, 3, [10, 4, 6])
     CoverageSolver.solverMethod(city)
     paint_city(city)
