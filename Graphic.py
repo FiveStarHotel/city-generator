@@ -98,8 +98,42 @@ def _generate_color(count: int):
         }
     return colors
 
-if __name__ == '__main__':
+def ask_int(prompt, min_value=None, max_value=None):
+    while True:
+        try:
+            value = int(input(prompt))
+            if min_value is not None and value < min_value:
+                print(f"Число должно быть не меньше {min_value}.")
+                continue
+            if max_value is not None and value > max_value:
+                print(f"Число должно быть не больше {max_value}.")
+                continue
+            return value
+        except ValueError:
+            print("Ошибка: введите целое число.")
 
-    city = CityMap(4, 3, [10, 4, 6])
+def ask_bool(prompt):
+    while True:
+        value = input(prompt + " (y/n): ").strip().lower()
+        if value in ("y", "yes", "д", "да"):
+            return True
+        if value in ("n", "no", "н", "нет"):
+            return False
+        print("Ошибка: введите y или n.")
+
+if __name__ == '__main__':
+    print("=== Конфигурация города ===")
+
+    vertCount = ask_int("Введите количество вершин: ", min_value=1)
+    infrastructureCount = ask_int("Введите количество типов строений: ", min_value=1)
+
+    radii = []
+    for i in range(infrastructureCount):
+        r = ask_int(f"Введите радиус для строения {i + 1}: ", min_value=0)
+        radii.append(r)
+
+    fixed_size = not ask_bool("Будет ли размер города зависеть от радиусов инфраструктуры?")
+
+    city = CityMap(vertCount, infrastructureCount, radii, fixed_size)
     CoverageSolver.solverMethod(city)
     paint_city(city)
