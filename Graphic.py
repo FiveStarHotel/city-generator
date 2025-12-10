@@ -3,6 +3,7 @@ import colorsys
 from CityMap import CityMap
 from ConstOfBuilds import *
 from CoverageSolver import CoverageSolver
+import sys, os
 
 def paint_city(city: CityMap):
     textures ={
@@ -83,7 +84,7 @@ def paint_city(city: CityMap):
 def _load_assets(types_dict, cell_size):
     for key, obj in types_dict.items():
         if obj["type"] == "image":
-            img = pygame.image.load(obj["value"]).convert_alpha()
+            img = pygame.image.load(resource_path(obj["value"])).convert_alpha()
             obj["image"] = pygame.transform.scale(img, (cell_size, cell_size))
 
 def _generate_color(count: int):
@@ -120,6 +121,11 @@ def ask_bool(prompt):
         if value in ("n", "no", "н", "нет"):
             return False
         print("Ошибка: введите y или n.")
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return relative_path
 
 if __name__ == '__main__':
     print("=== Конфигурация города ===")
