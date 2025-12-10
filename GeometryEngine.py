@@ -69,9 +69,9 @@ class GeometryEngine:
         new_j = center.j + dj
     
           # Проверяем четность координат
-          if new_i % 2 == 0 and new_j % 2 == 0:
-            if GeometryEngine._is_valid_building(new_i, new_j, city):
-              buildings.add(Point(new_i, new_j))
+        if new_i % 2 == 0 and new_j % 2 == 0:
+          if GeometryEngine._is_valid_building(new_i, new_j, city):
+            buildings.add(Point(new_i, new_j))
     
     return list(buildings)
       
